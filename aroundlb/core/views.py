@@ -3,6 +3,6 @@ from django.http import JsonResponse
 from django.conf import settings
 
 def home(request):
-    return render(request, 'home.html', {
+    return render(request, 'vr.html', {
         'modules': settings.CUSTOM_APPS,
     })

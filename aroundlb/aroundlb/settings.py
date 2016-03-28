@@ -43,7 +43,7 @@ INSTALLED_APPS = [
 ]
 
 CUSTOM_APPS = [
-    'maths',
+    'core',
 ]
 INSTALLED_APPS += CUSTOM_APPS
 

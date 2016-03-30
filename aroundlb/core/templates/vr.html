@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<div id="pano"></div>
+
+
+{% endblock %}
+
+
+{% block js %}
+<script src="/static/vrsample/20160326artexchange02sphere.js"></script>
+
+<script>
+  embedpano({swf:"/static/vrsample/20160326artexchange02sphere.swf", js:"/static/vrsample/20160326artexchange02sphere.js", xml:"/static/vrsample/20160326artexchange02sphere.xml", target:"pano", html5:"prefer", passQueryParameters:true});
+</script>
+{% endblock %}

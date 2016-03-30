@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<div id="pano"></div>
+
+
+{% endblock %}
+
+
+{% block js %}
+<script src="/static/krpano119/embedpano.js"></script>
+
+<script>
+  embedpano({xml:"{{ S3_URL_BASE }}/20020101random09/20020101random09.xml", js: "/static/krpano119/krpano.js", target:"pano", html5:"prefer", passQueryParameters:true});
+</script>
+{% endblock %}

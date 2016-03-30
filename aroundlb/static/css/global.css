@@ -1,0 +1,11 @@
+.content {
+  margin-top: 60px;
+}
+
+#pano {
+	position: absolute;
+	top:60px;
+	bottom:10px;
+	left: 10px;
+	right:10px;
+}

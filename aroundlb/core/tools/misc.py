@@ -3,17 +3,11 @@ import os, sys, string, random, pipes, requests
 from django.conf import settings
 from celery import shared_task
 
-# import core.tools.media as media
-# import core.tools.misc as misc
-# import core.tools.md5 as md5
-
 from pprint import pprint
 
 try: import simplejson as json
 except ImportError: import json
 
-
-@shared_task
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
 
@@ -43,8 +37,10 @@ def mkdirp(directory):
     if not os.path.isdir(directory):
         os.makedirs(directory)
 
-def get_extension(file_path):
-    return file_path.split(".")[-1].lower()
+
+def get_extension(path):
+    return path.split(".")[-1].lower()
+
 
 def random_string(strlen):
     import random

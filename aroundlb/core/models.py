@@ -30,6 +30,7 @@ class GenericBaseClass(models.Model):
     all Model classes in this project
     """
     datetime_updated = models.DateTimeField(auto_now=True, null=True, blank=True, db_index = True, help_text='The datetime this actual object was updated.', )
+    type = models.CharField(null=True, blank=True, db_index=True, max_length=32, )
 
     class Meta:
         abstract = True
@@ -43,11 +44,9 @@ class Asset(GenericBaseClass):
     """
     Represents unique Assets.
     """
-    file_path = models.TextField(null=True, blank=True, help_text='Displayable title', )
-    file_path_md5 = models.CharField(null=True, blank=True, db_index=True, max_length=32, )
-    preview = models.ImageField(null=True, blank=True, upload_to='previews/', height_field='preview_height', width_field='preview_width', max_length=256)
-    preview_width = models.IntegerField(null=True, blank=True, db_index=True, )
-    preview_height = models.IntegerField(null=True, blank=True, db_index=True, )
+    original = models.ImageField(null=True, blank=True, upload_to='originals/', height_field='original_height', width_field='original_width')
+    original_width = models.IntegerField(null=True, blank=True, db_index=True, )
+    original_height = models.IntegerField(null=True, blank=True, db_index=True, )
     md5 = models.CharField(null=True, blank=True, db_index=True, max_length=32, )
 
     class Meta:
@@ -55,27 +54,16 @@ class Asset(GenericBaseClass):
         ordering = ['-datetime_updated', ]
 
     def __unicode__(self):
-        if self.file_path:
-            return u'%s' % (self.file_path)
+        if self.original:
+            return u'%s' % (self.original.url)
         else:
             return u'(%s)' % (self.pk)
 
-    def update_preview(self):
-        path = self.file_path
-        extension = misc.get_extension(path)
-
-        if extension in settings.ENABLED_EXTENSIONS:
-            preview_path_stub = os.path.join('previews/',self.file_path_md5 + '.jpg')
-            print preview_path_stub
-            preview_path = os.path.join(settings.MEDIA_ROOT,preview_path_stub)
-            
-            # previewing.delay(path, preview_path)
-
-            print preview_path_stub
-            self.preview=preview_path_stub
-
-        print path
-        return True
+    def path(self):
+        if self.original:
+            return os.path.join(settings.MEDIA_ROOT, self.original.url)
+        else:
+            return False
 
     def update_metadata(self):
         metadata, created = Metadata.objects.update_or_create(pk=self.pk)
@@ -87,16 +75,11 @@ class Asset(GenericBaseClass):
         metadata.save()
 
     def save(self, *args, **kwargs):
-        if self.file_path and not self.file_path_md5:
-            self.file_path_md5 = md5.getmd5(self.file_path)
+        print self.path()
 
-        if settings.PREVIEW_UPDATE_ON_SAVE:
-            if self.file_path and not self.preview:
-                self.update_preview()
+        if self.original and not self.md5:
+            self.md5 = md5.getmd5(self.path())
 
-        if settings.METADATA_UPDATE_ON_SAVE:
-            if self.file_path:
-                self.update_metadata()
 
         super(Asset, self).save(*args, **kwargs)
 
@@ -130,7 +113,7 @@ class Metadata(GenericBaseClass):
     def update(self):
         print 'updating metadata for %s' % (self.asset)
 
-        metadata_response = metadata(self.asset.file_path)
+        metadata_response = metadata(self.asset.path())
         if metadata_response:
             self.content = metadata_response
             print metadata_response

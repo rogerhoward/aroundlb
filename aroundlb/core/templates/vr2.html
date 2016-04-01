@@ -11,9 +11,9 @@
 
 
 {% block js %}
-<script src="/static/krpano119/embedpano.js"></script>
+<script src="/static/krpano/embedpano.js"></script>
 
 <script>
-  embedpano({xml:"{{ S3_URL_BASE }}/20020101random09/20020101random09.xml", js: "/static/krpano119/krpano.js", target:"pano", html5:"prefer", passQueryParameters:true});
+  embedpano({xml:"{{ S3_URL_BASE }}/20020101random09/20020101random09.xml", js: "/static/krpano/krpano.js", target:"pano", html5:"prefer", passQueryParameters:true});
 </script>
 {% endblock %}

@@ -19,7 +19,6 @@ def make_pano(in_path):
     return out_path
 
 
-
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("path")

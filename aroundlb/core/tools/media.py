@@ -12,7 +12,7 @@ from core.tools.misc import *
 import PIL
 
 
-def metadata(file, options='groupedsimple', format='json'):
+def extract_metadata(file, options='groupedsimple', format='json'):
     if os.path.isfile(file):
         exiftool_defaults = ' -m '
 

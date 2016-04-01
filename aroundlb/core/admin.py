@@ -1,6 +1,10 @@
 from django.contrib import admin
-from models import Asset, Round, Metadata
+from models import Asset, Metadata
 
-class RoundAdmin(admin.ModelAdmin):
+class AssetAdmin(admin.ModelAdmin):
     pass
-admin.site.register(Round, RoundAdmin)
+admin.site.register(Asset, AssetAdmin)
+
+class MetadataAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Metadata, MetadataAdmin)

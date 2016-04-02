@@ -8,7 +8,9 @@ boto3==1.3.0
 botocore==1.4.8
 celery==3.1.23
 django-celery==3.1.17
+django-debug-toolbar==1.4
 django-extensions==1.6.1
+django-haystack==2.4.1
 docutils==0.12
 futures==3.0.5
 geopy==1.11.0
@@ -19,4 +21,5 @@ pytz==2016.3
 requests==2.9.1
 simplejson==3.8.2
 six==1.10.0
+sqlparse==0.1.19
 wsgiref==0.1.2

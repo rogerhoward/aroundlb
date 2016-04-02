@@ -14,8 +14,6 @@ import core.tools.media as media
 import core.tools.misc as misc
 import core.tools.md5 as md5
 
-# from core.tasks import *
-
 from PIL import Image
 from PIL import ImageFilter
 from pipes import quote

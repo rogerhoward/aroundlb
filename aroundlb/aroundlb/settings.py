@@ -54,6 +54,7 @@ CUSTOM_APPS = [
     'core',
     'djcelery',
     'django_extensions',
+    'django.contrib.gis',
 ]
 
 INSTALLED_APPS += CUSTOM_APPS

@@ -34,6 +34,7 @@ class GenericBaseClass(models.Model):
         abstract = True
         get_latest_by = "datetime_updated"
 
+
 class DescriptiveBaseClass(GenericBaseClass):
     """
     The standard abstract base class for primary classes provides basic fields and infrastructure for
@@ -57,6 +58,9 @@ class Panorama(DescriptiveBaseClass):
     """
     Represents a Panorama, which may contain multiple assets.
     """
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, db_index=True,)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, db_index=True,)
+
     class Meta:
         get_latest_by = 'datetime_updated'
         ordering = ['-datetime_updated', ]

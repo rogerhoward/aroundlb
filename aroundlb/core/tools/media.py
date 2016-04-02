@@ -31,6 +31,7 @@ def extract_metadata(file, options='groupedsimple', format='json'):
         return False
 
 
+
 def preview_img(in_path, out_path):
     print 'preview_img: %s' % (in_path)
 

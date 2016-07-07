@@ -1,4 +1,4 @@
-import os, pipes
+import os, pipes, json
 
 from django.conf import settings
 from celery import shared_task
@@ -13,20 +13,25 @@ import PIL
 
 
 def extract_metadata(file, options='groupedsimple', format='json'):
+    print('extract_metadata: {}'.format(file))
     if os.path.isfile(file):
         exiftool_defaults = ' -m '
 
         option_string = ''
         if options == 'groupedsimple':
-            option_string += '-G -s -s -g '
+            option_string += '-G -s -s -g -n '
         if format == 'json':
             option_string += '-json '
 
         command_string = settings.EXIFTOOL_PATH + exiftool_defaults + option_string + pipes.quote(file)
-        print command_string
+        # print command_string
         metaobj = os.popen(command_string).read()
-        print metaobj
-        return metaobj
+        # print metaobj
+        if format == 'json':
+            option_string += '-json '
+            return json.loads(metaobj)
+        else:
+            return metaobj
     else:
         return False
 

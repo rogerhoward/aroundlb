@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import uuid
 import os
 import simplejson as json
+import arrow
 
 from django.db import models
 from django.contrib.auth.models import User, Group
@@ -43,6 +44,7 @@ class DescriptiveBaseClass(GenericBaseClass):
 
     title = models.TextField(null=True, blank=True, help_text='Displayable title', )
     description = models.TextField(null=True, blank=True, help_text='Description', )
+    order = models.IntegerField(null=False, blank=False, default=0, db_index=True, )
     name = models.CharField(null=False, blank=False, unique=True, db_index=True, max_length=255, help_text='Unique name for this object', )
     type = models.CharField(null=True, blank=True, db_index=True, max_length=32, )
 
@@ -58,8 +60,19 @@ class Panorama(DescriptiveBaseClass):
     """
     Represents a Panorama, which may contain multiple assets.
     """
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, db_index=True,)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, db_index=True,)
+    latitude = models.FloatField(null=True, blank=True, db_index=True, )
+    longitude = models.FloatField(null=True, blank=True, db_index=True, )
+    datetime_created = models.DateTimeField(null=True, blank=True, db_index=True, )
+
+    @property
+    def json(self):
+        _dict = {}
+        _dict['latitude'] = self.latitude
+        _dict['longitude'] = self.longitude
+        _dict['title'] = self.title
+        _dict['description'] = self.description
+
+        return _dict
 
     class Meta:
         get_latest_by = 'datetime_updated'
@@ -97,14 +110,9 @@ class Asset(DescriptiveBaseClass):
     @property
     def path(self):
         if self.original:
-            return os.path.join(settings.MEDIA_ROOT, self.original.url)
+            return os.path.join(settings.MEDIA_ROOT, self.original.name)
         else:
             return False
-
-    def save(self, *args, **kwargs):
-        print('saving asset...')
-        super(Asset, self).save(*args, **kwargs)
-
 
 class Metadata(GenericBaseClass):
     """
@@ -121,30 +129,58 @@ class Metadata(GenericBaseClass):
                             max_length=32, )
 
     def update(self):
-        print 'updating metadata...'
+        print('metadata update()')
+        extracted_metadata = media.extract_metadata(self.asset.path)
+        print('extracted_metadata:')
+        print(extracted_metadata)
 
-        # metadata_response = media.extract_metadata(self.asset.path)
-        # if metadata_response:
-        #     self.content = metadata_response
-        #     print metadata_response
-        #     self.md5 = md5.getmd5(metadata_response)
-        #     return True
+        self.content = json.dumps(extracted_metadata)
+        self.md5 = md5.getmd5(self.content)
+        print(self.md5)
+
+    def save(self, *args, **kwargs):
+        print('metadata save()')
+
+        # if self.content:
+        #     print 'metadata has content'
         # else:
-        #     return False
+        #     print 'metadata no content: {}'.format(self.asset.path)
+        #     self.content = json.dumps(media.extract_metadata(self.asset.path))
+        #     # self.md5 = md5.getmd5(self.content)
+
+        super(Metadata, self).save(*args, **kwargs)
 
 
 
 
-# @receiver(post_save, sender=Asset)
-@receiver(pre_save, sender=Asset)
+
+@receiver(post_save, sender=Asset)
 def create_metadata_for_new_assets(sender, instance, **kwargs):
-    if not instance.metadata:
-        md = Metadata()
-        md.save()
-        instance.metadata = md
+        if instance.metadata:
+            print 'has md'
+            instance.metadata.save()
+        else:
+            print 'needs md'
+            print instance
+            print instance.path
+            md = Metadata()
+        #     md.content = json.dumps(media.extract_metadata(instance.path))
+        # #     # self.md5 = md5.getmd5(self.content)
+            md.save()
+            instance.metadata = md
+            instance.save()
+            print 'done making md'
+
+# # @receiver(pre_save, sender=Asset)
+# def create_metadata_for_new_assets(sender, instance, **kwargs):
+#     if instance.metadata:
+#         print 'does not need more metadata'
+#     else:
+#         print 'needs moar metadata'
 
 
 
-@receiver(pre_save, sender=Metadata)
-def import_metadata_on_create(sender, instance, **kwargs):
-    instance.update()
+# @receiver(post_save, sender=Metadata)
+# def import_metadata_on_create(sender, instance, **kwargs):
+#     instance.update()
+#     instance.save()

@@ -23,7 +23,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    url(r'', include('core.urls')),
+    url(r'core', include('core.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

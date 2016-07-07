@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block css %}
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-minimap/v1.0.0/Control.MiniMap.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+    <link href='/static/css/map.css' rel='stylesheet' />
+{% endblock %}
+
+{% block content %}
+    <div id="map"></div>
+{% endblock %}
+
+{% block js %}
+    <script src="//code.jquery.com/jquery-1.11.1.js"></script>
+    <script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-minimap/v1.0.0/Control.MiniMap.js'></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+    <script src='/static/js/map_init.js'></script>
+{% endblock %}

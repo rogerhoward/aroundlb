@@ -3,5 +3,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.home2),
+    url(r'^/$', views.home),
+    url(r'^/panos/$', views.panoramas),
 ]
+
